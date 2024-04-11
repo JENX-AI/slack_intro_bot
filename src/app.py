@@ -28,3 +28,18 @@ def handle_member_joined_channel(event: dict, say: slack_bolt.Say, logger: loggi
 @app.event(("app_mention"))
 def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Logger) -> None:
     ...
+
+
+
+
+
+
+
+# ====================================
+# Initialisation
+# ====================================
+
+if __name__ == "__main__":
+    # Create an app-level token with connections:write scope
+    handler = SocketModeHandler(app, SLACK_APP_TOKEN)
+    handler.start()
