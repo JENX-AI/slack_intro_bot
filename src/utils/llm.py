@@ -14,9 +14,9 @@ SYSTEM_PROMPT = f"""
     Start your message with "I'd like to introduce our newest member!" 
 """
 
-def create_prompt(syst_prompt: str, user_answers: str, user: str) -> str:
+def create_prompt(syst_prompt: str, user_answers: dict, user: str) -> str:
     return f"<s>[INST] <<SYS>>{syst_prompt}<</SYS>>\\n\\n" \
-        f"[INST] Here are {user}'s answers: {user_answers}[/INST]"
+        f"[INST] Here are {user}'s answers: {user_answers[user]}[/INST]"
 
 def create_output(prompt):
     try:
