@@ -1,5 +1,6 @@
 import os, logging
 import slack_bolt
+import together
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack import WebClient
@@ -8,11 +9,13 @@ from dotenv import load_dotenv
 # Utilities
 from utils.user_bank import existing_users
 from utils.questions import QUESTIONS, answers
+from utils.llm import SYSTEM_PROMPT, MODEL, MAX_TOKENS, TEMPERATURE, TOP_K, TOP_P, REPETITION_PENALTY, create_prompt, create_output
 
 # Credentials
 load_dotenv("../.env")
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 SLACK_APP_TOKEN = os.environ["SLACK_APP_TOKEN"]
+together.api_key = os.environ["TOGETHER_API_KEY"]
 
 app = App(token=SLACK_BOT_TOKEN)
 client = WebClient(SLACK_BOT_TOKEN)
@@ -43,16 +46,20 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
     thread_timestamp = body["event"]["ts"]
     
     try:
-        counter = 1 if user_id not in answers.keys() else len(answers[user_id]) + 1
+        counter = 1 if user_id not in answers.keys() else (len(answers[user_id]) + 1)
         say(QUESTIONS[counter], thread_ts = thread_timestamp)
         if user_id not in answers.keys():
-            answers[user_id] = [body['event']['text']]
-        else: answers[user_id].append(body['event']['text'])
+            answers[user_id] = [QUESTIONS[counter]]
+        else: 
+            answers[user_id].append(body['event']['text'] + " | " + QUESTIONS[counter])
         print(answers)
     except KeyError:
+        answers[user_id].append(body['event']['text'])
+        print(answers)
         say("Thank you for answering my questions. You may close this thread", thread_ts = thread_timestamp)
-
-
+        created_prompt = create_prompt(SYSTEM_PROMPT, answers, user_id)
+        complete_output = create_output(created_prompt)
+        say(complete_output, thread_ts = thread_timestamp)
     
 
 
