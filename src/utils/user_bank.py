@@ -1,3 +1,1 @@
-existing_users = {
-    
-}
+existing_users = []

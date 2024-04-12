@@ -54,12 +54,16 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
             answers[user_id].append(body['event']['text'] + " | " + QUESTIONS[counter])
         print(answers)
     except KeyError:
-        answers[user_id].append(body['event']['text'])
-        print(answers)
-        say("Thank you for answering my questions. You may close this thread", thread_ts = thread_timestamp)
-        created_prompt = create_prompt(SYSTEM_PROMPT, answers, user_id)
-        complete_output = create_output(created_prompt)
-        say(complete_output, thread_ts = thread_timestamp)
+        if user_id not in existing_users:
+            answers[user_id].append(body['event']['text'])
+            print(answers)
+            say("Thank you for answering my questions. You may close this thread", thread_ts = thread_timestamp)
+            created_prompt = create_prompt(SYSTEM_PROMPT, answers, user_id)
+            complete_output = create_output(created_prompt)
+            say(complete_output, thread_ts = thread_timestamp)
+            existing_users.append(user_id)
+        else:
+            say("User has already been introduced", thread_ts = thread_timestamp)
         
     # if user_id not in existing_users:
     #     say(QUESTIONS, thread_ts = thread_timestamp)
