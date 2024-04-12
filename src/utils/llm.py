@@ -15,8 +15,7 @@ REPETITION_PENALTY = 1.1
 # """
 
 SYSTEM_PROMPT = f"""
-    A new user joins a channel and needs an introduction. 
-    You will introduce the user to the rest of the users in the channel.
+    A new user joins a channel and you will introduce the user to the rest of the users in the channel.
     Use the background given to you. 
     This will consist of 5 questions the user was asked, and the answers the user gave.
     Don't ask the questions again.

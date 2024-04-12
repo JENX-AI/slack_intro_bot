@@ -32,13 +32,14 @@ def handle_member_joined_channel(event: dict, say: slack_bolt.Say, logger: loggi
     channel_id = event['channel']
 
     if user_id not in existing_users:
-        say(f"Welcome <@{user_id}> to the <#{channel_id}> channel! Please mention me by typing <@{bot_id}> and fill out the subsequent form!")
+        say(f"Welcome <@{user_id}> to the <#{channel_id}> channel! Please mention me by typing <@{bot_id}> and answer the subsequent questions!")
 
 
 @app.event(("app_mention"))
 def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Logger) -> None:
     user_id = body['event']['user']
     bot_id = "U06RWGEU2LX"
+    output_channel = body['event']['channel']
     try:
         channel_id = body["event"]["thread_ts"]
     except KeyError:
@@ -60,7 +61,8 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
             say("Thank you for answering my questions. You may close this thread", thread_ts = thread_timestamp)
             created_prompt = create_prompt(SYSTEM_PROMPT, answers, user_id)
             complete_output = create_output(created_prompt)
-            say(complete_output, thread_ts = thread_timestamp)
+            # say(complete_output, thread_ts = thread_timestamp)
+            say(complete_output)
             existing_users.append(user_id)
         else:
             say("User has already been introduced", thread_ts = thread_timestamp)
