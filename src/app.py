@@ -60,9 +60,7 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
         created_prompt = create_prompt(SYSTEM_PROMPT, answers, user_id)
         complete_output = create_output(created_prompt)
         say(complete_output, thread_ts = thread_timestamp)
-    
-
-
+        
     # if user_id not in existing_users:
     #     say(QUESTIONS, thread_ts = thread_timestamp)
     #     existing_users.append(user_id)
