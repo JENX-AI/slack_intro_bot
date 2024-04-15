@@ -72,46 +72,7 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
             say(complete_output)
             existing_users.append(user_id)
         else:
-            say("User has already been introduced", thread_ts = thread_timestamp)
-
-
-
-
-
-
-
-
-    
-    # try:
-    #     counter = 1 if user_id not in answers.keys() else (len(answers[user_id]) + 1)
-    #     say(QUESTIONS[counter], thread_ts = thread_timestamp)
-    #     if user_id not in answers.keys():
-    #         answers[user_id] = [QUESTIONS[counter]]
-    #     else: 
-    #         answers[user_id].append(body['event']['text'] + " | " + QUESTIONS[counter])
-    #     print(answers)
-    # except KeyError:
-    #     if user_id not in existing_users:
-    #         answers[user_id].append(body['event']['text'])
-    #         print(answers)
-    #         say("Thank you for answering my questions. You may close this thread", thread_ts = thread_timestamp)
-    #         created_prompt = create_prompt(SYSTEM_PROMPT, answers, user_id)
-    #         complete_output = create_output(created_prompt)
-    #         # say(complete_output, thread_ts = thread_timestamp)
-    #         say(complete_output)
-    #         existing_users.append(user_id)
-    #     else:
-    #         say("User has already been introduced", thread_ts = thread_timestamp)
-        
-    # if user_id not in existing_users:
-    #     say(QUESTIONS, thread_ts = thread_timestamp)
-    #     existing_users.append(user_id)
-    # else:
-    #     say("You are not a new user.", thread_ts = thread_timestamp)
-
-
-
-
+            say("Hi again, I've introduced you already :)", thread_ts = thread_timestamp)
 
 # ====================================
 # Initialisation
