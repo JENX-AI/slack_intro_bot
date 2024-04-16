@@ -34,7 +34,6 @@ def handle_member_joined_channel(event: dict, say: slack_bolt.Say, logger: loggi
     if user_id not in existing_users:
         say(f"Welcome <@{user_id}> to the <#{channel_id}> channel! Please mention me by typing <@{bot_id}> and answer the subsequent questions!")
 
-
 @app.event(("app_mention"))
 def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Logger) -> None:
     user_id = body['event']['user']
@@ -77,8 +76,6 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
         else:
             say("Hi again, I've introduced you already :)", thread_ts = thread_timestamp)
             
-            
-
 # ====================================
 # Initialisation
 # ====================================
