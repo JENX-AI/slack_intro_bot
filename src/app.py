@@ -59,10 +59,10 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
         else:
             user_answer = body['event']['text'].split('>')[1].strip()    # remove the bot's slack ID from the answer
             answers[user_id][QUESTIONS[counter]] = user_answer
-            say(QUESTIONS[counter + 1], thread_ts = thread_timestamp)    # key error here on counter 5 + 1 (QUESTIONS[6] doesn't exist)
+            say(QUESTIONS[counter + 1], thread_ts = thread_timestamp)    # intended key error here on counter 5 + 1 (QUESTIONS[6] doesn't exist)
             answers[user_id][QUESTIONS[counter + 1]] = ''
         print(answers)
-    except KeyError:  
+    except KeyError:    # intended key error fires here to finish off the task  
         if user_id not in existing_users: 
             print(answers)
             print('here we go')
@@ -70,9 +70,14 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
             created_prompt = create_prompt(SYSTEM_PROMPT, answers, user_id)
             complete_output = create_output(created_prompt)
             say(complete_output)
-            existing_users.append(user_id)
+            # existing_users.append(user_id)
+            # BELOW LINE IS FOR REPEATED USER INTROS
+            answers.pop(user_id)
+            
         else:
             say("Hi again, I've introduced you already :)", thread_ts = thread_timestamp)
+            
+            
 
 # ====================================
 # Initialisation

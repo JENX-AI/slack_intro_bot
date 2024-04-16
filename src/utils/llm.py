@@ -25,6 +25,7 @@ SYSTEM_PROMPT = f"""
     Don't ask the user any questions, just give the introduction.
     Don't ask the user to introducte themselves again.
     Feel free to use emojis.
+    Keep it under 180 words.
 """
 
 def create_prompt(syst_prompt: str, user_answers: dict, user: str) -> str:
