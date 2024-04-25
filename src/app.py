@@ -3,7 +3,7 @@ import slack_bolt
 import together
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
-from slack import WebClient
+from slack_sdk import WebClient
 from dotenv import load_dotenv
 
 # Utilities
@@ -12,7 +12,7 @@ from utils.questions import QUESTIONS, answers
 from utils.llm import SYSTEM_PROMPT, MODEL, MAX_TOKENS, TEMPERATURE, TOP_K, TOP_P, REPETITION_PENALTY, create_prompt, create_output
 
 # Credentials
-load_dotenv("../.env")
+load_dotenv()
 SLACK_BOT_TOKEN = os.environ["SLACK_BOT_TOKEN"]
 SLACK_APP_TOKEN = os.environ["SLACK_APP_TOKEN"]
 together.api_key = os.environ["TOGETHER_API_KEY"]
