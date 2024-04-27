@@ -41,7 +41,7 @@ def handle_member_joined_channel(event: dict, say: slack_bolt.Say, logger: loggi
         logging object
     """
     user_id = event['user']
-    bot_id = "U06U9E0BGVC"
+    bot_id = app.client.auth_test()['user_id']
     channel_id = event['channel']
 
     if user_id not in existing_users and user_id != bot_id:
