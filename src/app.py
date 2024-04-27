@@ -7,9 +7,8 @@ from slack_sdk import WebClient
 from dotenv import load_dotenv
 
 # Utilities
-from utils.user_bank import existing_users
-from utils.questions import QUESTIONS, answers
-from utils.llm import SYSTEM_PROMPT, MODEL, MAX_TOKENS, TEMPERATURE, TOP_K, TOP_P, REPETITION_PENALTY, create_prompt, create_output
+from utils.questions import QUESTIONS, answers, existing_users
+from utils.llm import SYSTEM_PROMPT, create_prompt, create_output
 
 # Credentials
 load_dotenv()
@@ -27,6 +26,20 @@ logger = logging.getLogger(__name__)
 
 @app.event(("member_joined_channel"))
 def handle_member_joined_channel(event: dict, say: slack_bolt.Say, logger: logging.Logger) -> None:
+    """
+    Handles response to a new member joining a channel
+    
+    Parameters
+    ----------
+    event : dict
+        event received from Slack user in Channels
+    
+    say : slack_bolt.Say
+        sends message to Slack
+    
+    logger : logging.Logger
+        logging object
+    """
     user_id = event['user']
     bot_id = "U06U9E0BGVC"
     channel_id = event['channel']
@@ -34,15 +47,24 @@ def handle_member_joined_channel(event: dict, say: slack_bolt.Say, logger: loggi
     if user_id not in existing_users and user_id != bot_id:
         say(f"Welcome <@{user_id}> to the <#{channel_id}> channel! Please mention me by typing <@{bot_id}> and answer the subsequent questions!")
 
+
 @app.event(("app_mention"))
 def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Logger) -> None:
+    """
+    Handles direct (@) messages to chatbot within Channels
+    
+    Parameters
+    ----------
+    body : dict
+        message received from Slack user in Channels
+    
+    say : slack_bolt.Say
+        sends message to Slack
+    
+    logger : logging.Logger
+        logging object
+    """
     user_id = body['event']['user']
-    bot_id = "U06U9E0BGVC"
-    output_channel = body['event']['channel']
-    try:
-        channel_id = body["event"]["thread_ts"]
-    except KeyError:
-        channel_id = body["event"]["ts"]
     thread_timestamp = body["event"]["ts"]
 
     try:
@@ -56,26 +78,31 @@ def handle_app_mention_event(body: dict, say: slack_bolt.Say, logger: logging.Lo
         # If it isn't the user's first mention, check the length of the user's answers
         # Add the answer to the previous answer's empty placeholder, ask and append the next question
         else:
-            user_answer = body['event']['text'].split('>')[1].strip()    # remove the bot's slack ID from the answer
+            # remove the bot's slack ID from the answer
+            user_answer = body['event']['text'].split('>')[1].strip()    
             answers[user_id][QUESTIONS[counter]] = user_answer
-            say(QUESTIONS[counter + 1], thread_ts = thread_timestamp)    # intended key error here on counter 5 + 1 (QUESTIONS[6] doesn't exist)
+            # intended key error here on counter 5 + 1 (QUESTIONS[6] doesn't exist)
+            say(QUESTIONS[counter + 1], thread_ts = thread_timestamp)    
             answers[user_id][QUESTIONS[counter + 1]] = ''
         print(answers)
+    
     except KeyError:    # intended key error fires here to finish off the task  
         if user_id not in existing_users: 
-            print(answers)
-            print('here we go')
+            # Send acknowledgement in same thread
             say("Thank you for answering my questions. You may close this thread", thread_ts = thread_timestamp)
+            
+            # Generate prompt based on user's output
             created_prompt = create_prompt(SYSTEM_PROMPT, answers, user_id)
+            # Use prompt to generate introduction
             complete_output = create_output(created_prompt)
             say(complete_output)
-            # existing_users.append(user_id)
             # BELOW LINE IS FOR REPEATED USER INTROS
             answers.pop(user_id)
             
         else:
             say("Hi again, I've introduced you already :)", thread_ts = thread_timestamp)
-            
+
+       
 # ====================================
 # Initialisation
 # ====================================
