@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 QUESTIONS = {
     1: "What's your name, and if you were a superhero, what would your superpower be?",
     2: "If you could have any fictional character as your best friend, who would it be and why?",
@@ -9,3 +11,5 @@ QUESTIONS = {
 answers = {
     
 }
+
+existing_users = []
